@@ -28,7 +28,8 @@ create table if not exists new_table(
 show tables from educ_manage; # 展示这个数据库里所有的表 
 
 -- 4. 删库跑路的方式 -- 
-/* drop database educ_manage  drop database if not exists educ_manage 多种多样的删库跑路方式 */
+/* drop database educ_manage  drop database if exists educ_manage 多种多样的删库跑路方式 */
+drop database `you're fired`; # 对于这种有空格有单引号的非标准库可以使用反引号将其扩起来
 
 -- 5. 修改表的方式 -- 
 alter table course add computer_science_score tinyint; # [first/after字段名] 在字段/末尾加上一行并给定名称类型 
