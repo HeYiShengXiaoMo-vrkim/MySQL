@@ -176,7 +176,8 @@ SHOW DATABASES;
   场景1:
   假设你正在设计一个简单的在线图书管理系统。需要创建一个名为 book_libs 
   的数据库,你决定使用 utf8mb4 字符集，排序方式选用大小写敏感的utf8mb4_0900_as_cs。
-
+create database book_libs character set utf8mb4 collate utf8mb4_0900_as_cs;
+  use book_libs;
   场景2:
   创建一个图书表books，判断不存在再创建，并且手动设置books表字符集为utf8mb4，添加表注释内容 。
   同时图书表books中应该以下列：
@@ -184,7 +185,16 @@ SHOW DATABASES;
       图书价格book_price列,类型为double(4,1)，添加注释。
       图书数量book_num列,类型为int，添加注释。
   按以上要求完成图书表的创建！
-
+  CREATE TABLE IF NOT EXISTS books (
+    book_name VARCHAR(20) COMMENT '图书名称',
+    book_price DECIMAL(4,1) COMMENT '图书价格（单位：元）',
+    book_num INT COMMENT '图书库存数量'
+) CHARACTER SET utf8mb4 COMMENT '图书信息表';
+  create table if not exists books(
+    book_name varchar(20) comment '',
+  book_price decimal(4,1) comment '',
+  book_num int comment ''
+  )character set utf8mb4 comment '';
 */
 
 CREATE DATABASE IF NOT EXISTS book_libs CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
@@ -213,7 +223,7 @@ SHOW TABLES FROM book_libs;
      smallint        2字节  无符号 0 - 2/16-1  有符号 -2 17 / 2 / 17 -1
   
   mysql方言:
-  
+  tiny(1) small(2) medium(3) int(4) big(8)
      tinyint         1字节  无符号 0 - 2/8 -1  有符号 -2 7 / 2/7-1
      mediumint       3字节  无符号 0 - 2/24 -1  有符号 -2 23 / 2/23-1
      bigint          8字节  无符号 0 - 2/64 -1  有符号 -2 63 / 2/63-1
@@ -224,7 +234,12 @@ SHOW TABLES FROM book_libs;
   注意: 选合适范围,范围合适先占有空间最小的!           
   
   创建一个ddl_d1库中,创建一个t1表,包含: 年龄和学号(范围不确定,但是没有负值)
-
+  create database ddl_d1;
+  use ddl_d1;
+  create table t1(
+  age tinyint comment'',
+  id mediumint comment''
+)comment'';
 */
 
 CREATE TABLE t1(
