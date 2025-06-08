@@ -36,16 +36,29 @@ CREATE DATABASE IF NOT EXISTS ddl_d1 CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_
       use 数据库名;
       注意: 对数据进行操作之前,必须要选中库! use 数据库; use 数据库名;
 */
+/*
+  1.2 数据库查看
+  查看所有库 
+  show databases;
+  查看当前使用的库
+  select database();
+  查看库下所有表
+  show tables from 数据库名;
+  查看创建库的信息和语句
+  show create database 数据库名;
+  选中和切换数据库;
+  use 数据库名;
+  对数据进行操作之前，必须要选中库！选中数据库之后才可以对数据进行操作,use 数据库名,use 数据库 ，show databases展示当前所有库； select database();查看当前所使用的库;show tables from 数据库名; show create database 数据库名;
+*/
+SHOW DATABASES; #展示当前的所有库
 
-SHOW DATABASES;
+SELECT DATABASE(); #展示当前使用的数据库 
+ 
+USE mysql; # 转换到mysql这个数据库中 
 
-SELECT DATABASE();
+SHOW TABLES FROM mysql; # 查看库下所有表
 
-USE mysql;
-
-SHOW TABLES FROM mysql;
-
-SHOW CREATE DATABASE ddl_d1;
+SHOW CREATE DATABASE ddl_d1; # 查看ddl_dl这个数据库的创建信息
 
 
 /*
@@ -58,7 +71,22 @@ SHOW CREATE DATABASE ddl_d1;
       alter database 数据库名 character set 字符集 collate 排序方式;
       注意: 数据库中没有修改名称的指令,如果你想改名字,备份数据,删除旧库,创建新库,恢复数据即可!
 */
-
+/*
+  1.3 数据库修改 
+  修改字符集 
+  alter database 数据库名 character set 字符集 
+  修改排序方式 
+  alter database 数据库名 collate 排序方式
+  修改字符集和排序方式 
+  alter database 数据库名 character set 字符集 collate 排序方式；
+  数据库中没有用修改名称的指令，如果想要改名字，备份数据，删除旧库，创建新库，恢复数据即可！
+  alter database 数据库名 character set 字符集 
+  修改排序方式
+  alter database 数据库名 collate 排序方式 
+  修改字符集和排序方式 
+  alter database 数据库名 character set 字符集 collate 排序方式
+  数据库中没有可以用于修改名称的指令，如果想要修改名字，备份数据，删除旧库，创建新库，恢复数据即可
+  */
 
 /*
   1.4 数据库删除
@@ -68,7 +96,14 @@ SHOW CREATE DATABASE ddl_d1;
       drop database if exists 数据库名;
       注意: 删除是一个危险命令,确认明确,再操作!!
 */
-
+/*
+  1.4数据库删除 
+  直接删除
+  drop database 数据库名； drop database 数据库名 
+  判断删除
+  drop database if exists 数据库名； drop database if exists 数据库名;
+  删除是一个危险指令，确认明确，在操作
+  */
 
 /*
   1.5 数据库管理练习
@@ -76,26 +111,34 @@ SHOW CREATE DATABASE ddl_d1;
       假设你正在为一个多语言的博客平台设计数据库。你需要创建一个名为 blog_platform 的数据库，
       支持存储多语言的文章和评论。由于博客平台可能包含来自不同语言的用户，你决定使用 utf8mb4字符集，
       排序方式选择默认值，以支持广泛的 Unicode 字符
+    create database if not exists blog_platform character set utf8mb4;
+  use blog_platform;
       场景2:
       查看数据库字符集和排序规则
+    show varibles like 'character_set_database';
+  show variables like 'collation_database';
       场景3:
       假设在后续的发展中，你决定将排序方式修改为 utf8mb4_0900_as_cs，以实现大小写敏感的比较。
+  alter database collate utf8mb4_0900_as_cs;
       场景4:
       查看数据库字符集和排序规则
+  show create database blog_platform;
       场景5:
       项目惨遭放弃，需要删除项目库，并且跑路
-
+  drop database if exists blog_platform;
+  show databases;
 */
 
 CREATE DATABASE IF NOT EXISTS blog_platform CHARACTER SET utf8mb4;
 
-USE blog_platform;
+USE blog_platform; #********这里修改数据之前要先use到当前的数据库
 
 SHOW VARIABLES LIKE 'character_set_database';
 SHOW VARIABLES LIKE 'collation_database';
 
 ALTER DATABASE blog_platform COLLATE utf8mb4_0900_as_cs;
 
+show create database blog_platform;
 
 DROP DATABASE IF EXISTS blog_platform;
 
@@ -117,12 +160,15 @@ SHOW DATABASES;
    )[描述][注释]
   
   建表事项
-    1. 表名 列名 列类型必须填写的
-    2. 推荐使用if not exists 
-    3. 注释不是必须得,但是是很有必要的!
-    4. 列之间使用,隔开,最后一列没有,
+    1. 表名 列名 列类型必须填写的  表明列名和列类型是必须填写的
+    2. 推荐使用if not exists   推荐使用if not exists
+    3. 注释不是必须得,但是是很有必要的!  注释不是必要的，但是是很有必要的 
+    4. 列之间使用,隔开,最后一列没有,  列之间使用，隔开，最后一列没有
 */
-
+/*
+2. create table [if not exist] 表名{
+  列名 类型 [列的约束] [列的注释],
+  */
 
 /*
   2.2 建表实战
