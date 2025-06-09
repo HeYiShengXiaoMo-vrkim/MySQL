@@ -195,6 +195,7 @@ create database book_libs character set utf8mb4 collate utf8mb4_0900_as_cs;
   book_price decimal(4,1) comment '',
   book_num int comment ''
   )character set utf8mb4 comment '';
+  show tables from book_libs; --show databases;
 */
 
 CREATE DATABASE IF NOT EXISTS book_libs CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;
@@ -237,8 +238,8 @@ SHOW TABLES FROM book_libs;
   create database ddl_d1;
   use ddl_d1;
   create table t1(
-  age tinyint comment'',
-  id mediumint comment''
+  age tinyint unsigned comment'',
+  id mediumint unsigned comment''
 )comment'';
 */
 
@@ -248,7 +249,8 @@ CREATE TABLE t1(
 )
 
 
-/*
+/*tiny small medium int big
+  float double decimal 
   2.4 建表类型[浮点/定值]
   浮点类型(类型,M,D)
      float(m,d)   4字节   m 24   d 8
@@ -278,7 +280,7 @@ CREATE TABLE t1(
 
 /*
   2.6 建表类型[字符串]
-  字符串类型
+  字符串类型 char varchar text
      char 固定长度类型 一旦声明固定占有对应的空间 M 最大255 [性能较好]
      varchar 可变长度类型 一旦声明,可以插入小于的长度,自动进行伸缩 M 占有的空间不能超过一行的最大显示65535字节 [性能一般]
      text 大文本类型,声明不要指定长度,有固定的大小限制, text [65535] , 不占有一行的最大限制空间
@@ -313,25 +315,40 @@ CREATE TABLE t1(
   2.7 建表类型[时间类型]
   时间类型 
      year    1 yyyy | yy   '1910' | 1910
-     time    3 HH:MM:SS    '10:10:10' 
-     date    3 YYYY-MM-DD  '1910-10-10'
-     datetime 8 YYYY-MM-DD HH:MM:SS '1910-10-10 10:10:10'
-     timestamp 4 YYYY-MM-DD HH:MM:SS '1970-10-10 10:10:10'
+     time    3 HH:MM:SS    '10:10:10'       time
+     date    3 YYYY-MM-DD  '1910-10-10'      date
+     datetime 8 YYYY-MM-DD HH:MM:SS '1910-10-10 10:10:10'   datetime
+     timestamp 4 YYYY-MM-DD HH:MM:SS '1970-10-10 10:10:10'  timestamp date time
   注意情况
-     1. year可以写两位年 00 - 99  00-69 =2000 - 2069 70 - 99 = 1970 - 1999 推荐四位的年
+     1. year可以写两位年 00 - 99  00-69 =2000 - 2069 70 - 99 = 1970 - 1999 推荐四位的年  
      2. 时间类型,要遵循他们的格式插入,插入的时候就是按字符插入,时间默认不会自动赋值
   扩展自动填写时间:
-     1.插入默认添加时间
-        datatime | timestamp default current_timestamp 
+     1.插入默认添加时间  
+        datetime | timestamp default current_timestamp  / datetime | timestamp default current_timestamp 
      2.修改默认更改时间
-        datatime | timestamp default current_timestamp on update current_timestamp 
+        datetime | timestamp default current_timestamp on update current_timestamp  / datetime | timestamp default current+timestamp on update current_timestamp
   演示: 创建t2表,
          注册日期 字段插入自动添加时间,更新数据不变
          更新日期 字段插入自动添加时间,更新数据时间改变
+create table t2(
+  name varachar(20),
+  reg_time datetime default current_timestamp comment '',
+  up_time datetime default current_timestamp on update current_timestamp comment ''
+)
+create table t2(
+  name varchar(20),
+  reg_time datetime default current_timestamp comment '',
+  up_time datetime default current_timestamp on update current_timestamp comment ''
+)
+create table t2(
+  name varchar(20),
+  reg_time datetime default current_timestamp comment'',
+  up_time datetime default current_timestamp on update current_timestamp comment ''
+)
 */
 
 CREATE TABLE t2(
-  name1 VARCHAR(20),
+  name VARCHAR(20),
   reg_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '注册日期,插入数据自动维护时间',
   up_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT  '更新日期,插入数据填写时间,更新数据自动改变时间'
 )
@@ -352,7 +369,15 @@ CREATE TABLE t2(
     生日 -> stu_birthday date 
     注册 -> stu_regtime datetime default current_timestamp 
     更新 -> stu_uptime  datetime default current_timestamp on update current_timestamp 
-  
+  create table student(
+    stu_name varchar(20),
+    stu_sex char,
+  stu_age tinyint unsigned,
+  stu_height double(4,1),
+  stu_birthday date,
+  stu_regtime datetime default current_timestamp,
+  stu_uptime datetime default current_timestamp on update current_timestamp
+  )
 */
 
 
@@ -372,19 +397,19 @@ CREATE TABLE student(
   2.8 修改和删除表
       修改表中列
         添加列
-          alter table 表名 add 列名 类型 [first|alter 列名] ;
+          alter table 表名 add 列名 类型 [first|alter 列名] ;   添加列 add
         修改列名
-          alter table 表名 change 原列名 新列名 新类型 [first|alter 列名] ;
+          alter table 表名 change 原列名 新列名 新类型 [first|alter 列名] ;   修改列名 change
         修改列类型
-          alter table 表名 modify 列名 新类型 [first|alter 列名] ;
+          alter table 表名 modify 列名 新类型 [first|alter 列名] ;  修改列类型 modify
         删除列
-          alter table 表名 drop 列名;
+          alter table 表名 drop 列名;    删除列 drop
       修改表名
-         alter table rename [to] 新表名;
+         alter table rename [to] 新表名;   重命名 rename
       删除表
-         drop table [if exists ] 表名;
+         drop table [if exists ] 表名;   删除 drop
       清空表数据
-         truncate  table 表名;
+         truncate  table 表名;   清除 truncate
 */
 
 
@@ -416,23 +441,28 @@ CREATE TABLE  employeess(
 
 # 要求2：将表employees的mobile字段修改到code字段后面。
 ALTER TABLE employeess MODIFY mobile VARCHAR(25) AFTER CODE;
+alter table employeess modify mobile varchar(25) after code;
+alter table employeess modify mobile varchar(25) after code;   alter table employeess modify mobile varchar(25) after code;   alter table employeess modify mobile varchar(20) after code;
 
 # 要求3：将表employees的birth字段改名为birthday;
 ALTER TABLE employeess CHANGE birth birthday DATE;
+alter table employeess change birth birthday date;  alter table 表名称 change 原来的列名 新列名 类型
 
 # 要求4：修改sex字段，数据类型为char（1）。
-ALTER TABLE employeess MODIFY sex CHAR(1);
-
-DESC employeess;
+ALTER TABLE employeess MODIFY sex CHAR(1);  alter table 表名称 modify 列名称 类型
+alter table employees modify sex char(1);       alter table employeess modify sex char(1);
+DESC employeess; #展示所有表
 
 # 要求5：删除字段note；
-ALTER TABLE employeess DROP note;
+ALTER TABLE employeess DROP note;   alter table employeess drop note;  alter table 表名称 drop 列名
 
 #要求6：增加字段名favoriate_activity，数据类型为varchar（100）；
-ALTER TABLE employeess ADD favoriate_activity VARCHAR(100);
+ALTER TABLE employeess ADD favoriate_activity VARCHAR(100);   alter table employeess add favoriate_activity varchar(100);
+alter table 表名 add 列名 类型
 
 #要求7：将表employees的名称修改为 employees_info
 ALTER TABLE employeess RENAME employees_info;
+alter table emploeess rename employees_info;
 
 
 
