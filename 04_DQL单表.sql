@@ -5,20 +5,21 @@ USE test04_dql;
 
 
 -- 创建员工表
-DROP TABLE IF EXISTS `t_employee`;
+DROP TABLE IF EXISTS `t_employee`; -- 先删除在创建
+# `ename` varchar(20) character set utf8mb4 collate utf8mb4_0900_ai_ci not null comment '';
 
 CREATE TABLE `t_employee` (
   `eid` INT NOT NULL COMMENT '员工编号',
-  `ename` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '员工姓名',
+  `ename` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '员工姓名', #约束非空和排序方式
   `salary` DOUBLE NOT NULL COMMENT '薪资',
   `commission_pct` DECIMAL(3,2) DEFAULT NULL COMMENT '奖金比例',
   `birthday` DATE NOT NULL COMMENT '出生日期',
-  `gender` ENUM('男','女') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '男' COMMENT '性别',
+  `gender` ENUM('男','女') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '男' COMMENT '性别', # 约束选择，规定默认值，规定排序方式和编码
   `tel` CHAR(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '手机号码',
   `email` VARCHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '邮箱',
   `address` VARCHAR(150) DEFAULT NULL COMMENT '地址',
-  `work_place` SET('北京','深圳','上海','武汉') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '北京' COMMENT '工作地点'
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `work_place` SET('北京','深圳','上海','武汉') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '北京' COMMENT '工作地点' #设置四个可选值，规定排序方式和编码规则，非空，默认值
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci; # 
 
 
 INSERT  INTO `t_employee`(`eid`,`ename`,`salary`,`commission_pct`,`birthday`,`gender`,`tel`,`email`,`address`,`work_place`) 
@@ -60,13 +61,16 @@ VALUES (1,'孙洪亮',28000,'0.65','1980-10-08','男','13789098765','shl@atguigu
 # 解释: 利用select关键字,快速输出一个运算结果或者函数,类似 java 控制台输出
 # 语法: select 运算 , 函数
 # 查询当前时间 now()
-SELECT NOW();
+SELECT NOW(); # select now();
 # 场景2: 指定表查询结果
 # 解释: 查询的时候,结果来至于某一张表或者多表!
-# 语法:  select 查询表中的哪些列 列名,列名,列名 from 参照的表名
+# 语法:  select 查询表中的哪些列 列名,列名,列名 from 参照的表名 
 #        select 表名.列名, 列名,列名 from 参照的表名     # 表名.列名 多表的时候,需要这么,多表的列名可能重复!    
 #        select * , 表名.*  from 表名;  * 就是表中的所有列
 # 查询全部员工信息
+# select * from 表名
+# select 表名.* from 表名
+# select 列名,列名 from 表名;
 SELECT * FROM t_employee;
 SELECT t_employee.* FROM t_employee;
 # 查询全部员工姓名和工资
@@ -76,47 +80,55 @@ SELECT ename,salary FROM t_employee;
 # 解释: 查询时候可以给列起别名,为了匹配后期java数据格式
 # 语法: select 列名 as 别名 , 列名 别名 from 表名
 # 查询全部员工姓名和工资,名字显示为name名称
+# select ename as name,salary from t_employee;
 SELECT ename AS NAME,salary FROM t_employee;
 SELECT ename NAME,salary FROM t_employee;
 
 # 场景4: 去掉重复行数据
-# 解释: 根据结果列进行重置值去除
+# 解释: 根据结果列进行重置值去除 
 # 语法: select distinct 列名, 列名 ,列名 from 表名;
 # 查询员工的性别种类!
 SELECT DISTINCT gender FROM t_employee;
-
+# select distinct gender from t_employee;   # distinct进行去重 distinct distinct distinct进行去重
 # 场景5: 查询常数列
 # 解释: 人为制造的一个值和一个列! (多个值,多个列)
 # 语法:  select 列,列名,'值' as 列名 from 表名;
 # 查询员工姓名和工资,并且添加一个公司company为尚硅谷
+# select ENMAE,salar, 'henu' school from 表名;  select ename, salary, 'henu' school from 表名;
 SELECT ename NAME,salary , '尚硅谷' company FROM t_employee;
 
 # 2.2 基本SELECT查询练习
 # 1. 查询所有员工信息
 SELECT * FROM t_employee;
-# 2. 查询所有员工信息，并且添加一列 etype,值固定为`总部`
+# select * from t_employee;
+# 2. 查询所有员工信息，并且添加一列 etype,值固定为`总部` 添加一列固定为总部，这个时候要使用etyoe对数据进行操作
 SELECT * , '总部' etype FROM t_employee;
-SELECT'总部' etype , *  FROM t_employee; # * 通配符,必须放在第一位!!
+# select *,'总部' etype from t_employee;  select *,'总部' etype from t_emplyee; 
+# 错误的做法：SELECT'总部' etype , *  FROM t_employee; # * 通配符,必须放在第一位!! 通配符必须放在第一位
 # 3. 查询所有员工姓名和工资以及工作地址
 SELECT ename , salary , work_place FROM t_employee;
-# 4. 查询所有员工姓名，月薪和年薪（年薪等于月薪*12,结果列字段为 姓名 , 月薪 ， 年薪 ）
+# select ename,salary,work_place from t_employee;select ename,salary,work_place from t_employee;
+# 4. 查询所有员工姓名，月薪和年薪（年薪等于月薪*12,结果列字段为 姓名 , 月薪 ， 年薪 ）只有月薪没有年薪的情况下尝试进行计算得到相应的结果，这个时候使用'value'+as的情况进行描述
 SELECT ename 姓名,salary 月薪 , salary * 12 AS 年薪 FROM t_employee;
-# 5. 查询所有员工姓名，月薪，每月奖金，每月总收入（结果列字段为 姓名 , 月薪 ， 奖金，月总 ）
+# select ename 姓名,salary 月星,salary *12 as 年薪 from t_employee;
+# 5. 查询所有员工姓名，月薪，每月奖金，每月总收入（结果列字段为 姓名 , 月薪 ， 奖金，月总 ）这里的结果列字段不是和之前的一样了，而是换成了红温
 SELECT ename  姓名 , salary  月薪 , salary * commission_pct 奖金 , salary +  salary * commission_pct 月总收入 FROM t_employee;
+# select ename 姓名, salary 月薪, salary * commision_pct 奖金, salary+salary * Commission_pct 月总收入 from t_emnployee;
 SELECT ename  姓名 , salary  月薪 , salary * IFNULL(commission_pct,0) 奖金 , salary +  salary * IFNULL(commission_pct,0) 月总收入 FROM t_employee;
-# 因为,有些员工没有奖金, 奖金占比就是null, null 运算 任何值 = null
+# select ename 姓名,salary 月薪], salary * ifnull(commission_pct,0) 奖金 , salary +salary*ifnull(commission_pct,0) 月总收入 from t_employee;
+# 因为,有些员工没有奖金, 奖金占比就是null, null 运算 任何值 = null null和任意值运算的结果都是null
 # ifnull(列,为null你给与的默认值) 0
 # 6. 查询所有员工一共有几种薪资
 SELECT DISTINCT salary FROM t_employee;
-
+# 使用distinct进行去重，select distinct salary from t_employee;去重判断一共有多少种薪资
 
 # 2.3 显示表结构
 # 
 # 场景1: 显示表结构
-# 解释: 使用命令查看表中的列和列的特征
+# 解释: 使用命令查看表中的列和列的特征  使用命令查看表中的特征和相关信息
 # 语法:  
-#   describe 表名；
-#   desc 表名；
+#   describe 表名；   describe 表名; 
+#   desc 表名； desc Biaoming; 查看表的相关信息
 
 DESC t_employee;
 
@@ -127,9 +139,9 @@ DESC t_employee;
 # 场景1: 基本条件过来
 # 解释: 就是对表的行数据进行筛选,符合条件的行,在进行结果列的查询!
 # 语法: select 列信息 from 表信息 where [ 条件 and or xor 条件  and or xor 条件 ]  true | false 
-# 总结：from   作用 执行参照和查询的表
-#       where  作用 进行表中行的数据筛选
-#       select 作用 进行符合条件行的数据类的筛选
+# 总结：from   作用 执行参照和查询的表   from对执行参数进行选择 
+#       where  作用 进行表中行的数据筛选 where对表中的数据进行筛选
+#       select 作用 进行符合条件行的数据类的筛选 select对符合条件行的数据类进行筛选
 
 
 # 2.5 基本SELECT查询练习（过滤条件）
@@ -164,16 +176,14 @@ SELECT 100, 100 + 0, 100 - 0, 100 + 50, 100 + 50 -30, 100 + 35.5, 100 - 35.5 ,
 # 3.2 算数运算符练习题
 # 1. 查询薪资奖金和大于20000的员工信息
 SELECT * FROM t_employee WHERE salary + IFNULL(commission_pct,0) * salary > 20000;
+# select * from t_employee where salary + ifnull(commisison_pct,0) * salary > 2000;
 # 2. 查询薪资减去奖金的差小于8000的员工信息
 SELECT * FROM t_employee WHERE salary - IFNULL(commission_pct,0) * salary < 8000;
 # 3. 查询所有员工的姓名,工资,奖金数额
 SELECT ename,salary , salary * IFNULL(commission_pct,0) FROM t_employee
 # 4. 查询员工编号是偶数的员工信息
 SELECT * FROM t_employee WHERE eid % 2 = 0;
-
-
-
-
+# select * from t_employee where eid % 2 = 0;
 
 # 3.3 比较运算符
 # 
@@ -189,7 +199,7 @@ SELECT * FROM t_employee WHERE eid % 2 = 0;
 # 3.4 比较运算符练习题
 # 1. 查询员工编号为1的员工信息。
 SELECT * FROM t_employee WHERE  eid = 1;
-SELECT * FROM t_employee WHERE  eid = '1';
+SELECT * FROM t_employee WHERE  eid = '1'; 
 # 2. 查询薪资大于5000的员工信息。
 SELECT * FROM t_employee WHERE salary > 5000;
 # 3. 查询有奖金的员工信息。
