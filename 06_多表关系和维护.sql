@@ -3,8 +3,6 @@
 CREATE DATABASE IF NOT EXISTS test06_multi;
 USE test06_multi;
 
-
-
 # 二、 多表关系具体维护
 
 # 一对一: 员工和档案表
@@ -53,7 +51,7 @@ CREATE TABLE blog(
 );
 
 
-# 多对多: 学生和课程表
+# 多对多: 学生和课程表 多表查询要建立中间表建立主外键关系
 CREATE TABLE student(
     s_id  INT PRIMARY KEY AUTO_INCREMENT,
     s_name  VARCHAR(20) NOT NULL,  
